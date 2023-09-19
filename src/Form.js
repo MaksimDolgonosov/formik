@@ -1,4 +1,4 @@
-import { useFormik } from 'formik';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { object, string, number, boolean } from 'yup';
 // const validate = values => {
 //     const errors = {};
@@ -23,90 +23,84 @@ import { object, string, number, boolean } from 'yup';
 //     return errors;
 // };
 
-const Form = () => {
-    const formik = useFormik({
-        initialValues: {
+const DonationForm = () => {
+
+    return (
+        <Formik initialValues={{
             name: '',
             email: '',
             amount: 0,
             text: '',
             currency: 'USD',
             terms: false
-        },
-        validationSchema: object({
-            name: string().min(3, 'Минимум 3 символа!').required('Обязательное поле!'),
-            email: string().email('Неправильный email').required('Обязательное поле!'),
-            amount: number().required('Обязательное поле!').positive().integer().min(1, 'Минимум 1 единица валюты'),
-            text: string().min(10, 'Минимум `10 символов!'),
-            currency: string().required('Выберете валюту пожертвования'),
-            terms: boolean().required('Обязательное согласие').oneOf([true], "Необходимо согласие!")
-        }),
-        onSubmit: values => {
-            console.log(JSON.stringify(values, null, 2));
-        },
-    });
+        }}
+            validationSchema={object({
+                name: string().min(3, 'Минимум 3 символа!').required('Обязательное поле!'),
+                email: string().email('Неправильный email').required('Обязательное поле!'),
+                amount: number().required('Обязательное поле!').positive().integer().min(1, 'Минимум 1 единица валюты'),
+                text: string().min(10, 'Минимум 10 символов!'),
+                currency: string().required('Выберете валюту пожертвования'),
+                terms: boolean().required('Обязательное согласие').oneOf([true], "Необходимо согласие!")
+            })}
+            onSubmit={values => {
+                console.log(JSON.stringify(values, null, 2));
+            }}>
+            <Form className="form">
+                <h2>Отправить пожертвование</h2>
+                <label htmlFor="name">Ваше имя</label>
+                <Field id="name" name="name" type="text" />
+                <ErrorMessage name="name" className="error" component={"div"} />
+                {/* {formik.errors.name && formik.touched.name ? <div className="error">{formik.errors.name}</div> : null} */}
+                <label htmlFor="email">Ваша почта</label>
+                <Field id="email" name="email" type="email" />
+                <ErrorMessage name="email" className="error" component={"div"} />
+                <label htmlFor="amount">Количество</label>
+                <Field id="amount" name="amount" type="number" />
+                <ErrorMessage name="amount" className="error" component={"div"} />
+                <label htmlFor="currency">Валюта</label>
+                <Field id="currency" name="currency" as="select">
+                    <option value="">Выберите валюту</option>
+                    <option value="USD">USD</option>
+                    <option value="UAH">UAH</option>
+                    <option value="RUB">RUB</option>
+                </Field>
+                <ErrorMessage name="currency" className="error" component={"div"} />
+                <label htmlFor="text">Ваше сообщение</label>
+                <Field id="text" name="text" as="textarea" />
+                <ErrorMessage name="text" className="error" component={"div"} />
+                <label className="checkbox">
+                    <Field name="terms" type="checkbox" />
+                    Соглашаетесь с политикой конфиденциальности?
+                </label>
+                <ErrorMessage name="terms" className="error" component={"div"} />
+                <button type="submit">Отправить</button>
+            </Form>
+        </Formik>
+    )
 
-    return (
-        <form className="form">
-            <h2>Отправить пожертвование</h2>
-            <label htmlFor="name">Ваше имя</label>
-            <input
-                id="name"
-                name="name"
-                type="text"
-                onChange={formik.handleChange}
-                value={formik.values.name}
-                onBlur={formik.handleBlur} />
-            {formik.errors.name && formik.touched.name ? <div className="error">{formik.errors.name}</div> : null}
-            <label htmlFor="email">Ваша почта</label>
-            <input
-                id="email"
-                name="email"
-                type="email"
-                onChange={formik.handleChange}
-                value={formik.values.email}
-                onBlur={formik.handleBlur}
-            />
-            {formik.errors.email && formik.touched.email ? <div className="error">{formik.errors.email}</div> : null}
-            <label htmlFor="amount">Количество</label>
-            <input
-                id="amount"
-                name="amount"
-                type="number"
-                onChange={formik.handleChange}
-                value={formik.values.amount}
-                onBlur={formik.handleBlur}
-            />
-            {formik.errors.amount && formik.touched.amount ? <div className="error">{formik.errors.amount}</div> : null}
-            <label htmlFor="currency">Валюта</label>
-            <select
-                id="currency"
-                name="currency"
-                onChange={formik.handleChange}
-                value={formik.values.currency}>
-                <option value="">Выберите валюту</option>
-                <option value="USD">USD</option>
-                <option value="UAH">UAH</option>
-                <option value="RUB">RUB</option>
-            </select>
-            <label htmlFor="text">Ваше сообщение</label>
-            <textarea
-                id="text"
-                name="text"
-                onChange={formik.handleChange}
-                value={formik.values.text}
-            />
-            <label className="checkbox">
-                <input name="terms" type="checkbox"
-                    onChange={formik.handleChange}
-                    value={formik.values.terms}
-                    onBlur={formik.handleBlur} />
-                Соглашаетесь с политикой конфиденциальности?
-            </label>
-            {formik.errors.terms && formik.touched.terms ? <div className="error">{formik.errors.terms}</div> : null}
-            <button type="submit" >Отправить</button>
-        </form>
-    ) 
+
+    // const formik = useFormik({
+    //     initialValues: {
+    //         name: '',
+    //         email: '',
+    //         amount: 0,
+    //         text: '',
+    //         currency: 'USD',
+    //         terms: false
+    //     },
+    //     validationSchema: object({
+    //         name: string().min(3, 'Минимум 3 символа!').required('Обязательное поле!'),
+    //         email: string().email('Неправильный email').required('Обязательное поле!'),
+    //         amount: number().required('Обязательное поле!').positive().integer().min(1, 'Минимум 1 единица валюты'),
+    //         text: string().min(10, 'Минимум `10 символов!'),
+    //         currency: string().required('Выберете валюту пожертвования'),
+    //         terms: boolean().required('Обязательное согласие').oneOf([true], "Необходимо согласие!")
+    //     }),
+    //     onSubmit: values => {
+    //         console.log(JSON.stringify(values, null, 2));
+    //     },
+    // });
+
 }
 
-export default Form;
+export default DonationForm;

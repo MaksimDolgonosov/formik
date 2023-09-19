@@ -1,10 +1,10 @@
 import './app.scss';
-import Form from './Form';
+import DonationForm from './Form';
 
 function App() {
   return (
     <div className="app">
-        <Form/>
+        <DonationForm/>
     </div>
   );
 }
