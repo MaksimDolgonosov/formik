@@ -1,4 +1,4 @@
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Formik, Field, Form, ErrorMessage, useField } from 'formik';
 import { object, string, number, boolean } from 'yup';
 // const validate = values => {
 //     const errors = {};
@@ -22,6 +22,21 @@ import { object, string, number, boolean } from 'yup';
 
 //     return errors;
 // };
+
+const MyTextField = ({ label, ...props }) => {
+    const [field, meta] = useField(props);
+    return (
+        <>
+            <label>
+                <label htmlFor={props.name}>{label}</label> 
+                <input {...field} {...props} />
+            </label>
+            {meta.touched && meta.error ? (
+                <div className="error">{meta.error}</div>
+            ) : null}
+        </>
+    );
+};
 
 const DonationForm = () => {
 
@@ -47,10 +62,11 @@ const DonationForm = () => {
             }}>
             <Form className="form">
                 <h2>Отправить пожертвование</h2>
-                <label htmlFor="name">Ваше имя</label>
+                <MyTextField id="name" name="name" type="text" label="Ваше имя"></MyTextField>
+                {/* <label htmlFor="name">Ваше имя</label>
                 <Field id="name" name="name" type="text" />
                 <ErrorMessage name="name" className="error" component={"div"} />
-                {/* {formik.errors.name && formik.touched.name ? <div className="error">{formik.errors.name}</div> : null} */}
+                {formik.errors.name && formik.touched.name ? <div className="error">{formik.errors.name}</div> : null} */}
                 <label htmlFor="email">Ваша почта</label>
                 <Field id="email" name="email" type="email" />
                 <ErrorMessage name="email" className="error" component={"div"} />
